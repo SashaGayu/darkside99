@@ -14,7 +14,7 @@
         </tr>
         <tr class="table__body" v-for="dessert of dessertsToShow">
           <th v-for="(header, idx) in headers" :key="idx">
-              <div class="desert__body">{{ dessert[header.id] }}</div>
+              <div class="desert__body"><button class="btn btn-light" @click="editNode">{{ dessert[header.id] }}</button></div>
           </th>
         </tr>
       </table>
@@ -24,6 +24,10 @@
         <option>10</option>
       </select>
       <button type="button" class="btn btn-outline-secondary" :class="{active: item === page}" v-for="(item, index) in Math.ceil(desserts.length / +selected)" @click="changePage(item)">{{ item }}</button>
+    </div>
+    <div v-if="temporary.id">
+      <input type="text" v-model="temporary.id">
+      <button @click="saveTemporary">save</button>
     </div>
   </div>
 </template>
@@ -70,6 +74,7 @@ export default {
       sortType: true,
       desserts: [
         {
+          id: '1',
           name: 'Frozen Yogurt',
           calories: 159,
           fat: 6.0,
@@ -78,6 +83,7 @@ export default {
           iron: '1%',
         },
         {
+          id: '2',
           name: 'Ice cream sandwich',
           calories: 237,
           fat: 9.0,
@@ -86,6 +92,7 @@ export default {
           iron: '1%',
         },
         {
+          id: '3',
           name: 'Eclair',
           calories: 262,
           fat: 16.0,
@@ -94,6 +101,7 @@ export default {
           iron: '7%',
         },
         {
+          id: '4',
           name: 'Cupcake',
           calories: 305,
           fat: 3.7,
@@ -102,6 +110,7 @@ export default {
           iron: '8%',
         },
         {
+          id: '5',
           name: 'Gingerbread',
           calories: 356,
           fat: 16.0,
@@ -110,6 +119,7 @@ export default {
           iron: '16%',
         },
         {
+          id: '6',
           name: 'Jelly bean',
           calories: 375,
           fat: 0.0,
@@ -118,6 +128,7 @@ export default {
           iron: '0%',
         },
         {
+          id: '7',
           name: 'Lollipop',
           calories: 392,
           fat: 0.2,
@@ -126,6 +137,7 @@ export default {
           iron: '2%',
         },
         {
+          id: '8',
           name: 'Honeycomb',
           calories: 408,
           fat: 3.2,
@@ -134,6 +146,7 @@ export default {
           iron: '45%',
         },
         {
+          id: '9',
           name: 'Donut',
           calories: 452,
           fat: 25.0,
@@ -142,6 +155,7 @@ export default {
           iron: '22%',
         },
         {
+          id: '10',
           name: 'KitKat',
           calories: 518,
           fat: 26.0,
@@ -152,6 +166,7 @@ export default {
       ],
       page: 2,
       arrow: '↑',
+      temporary: {},
     }
   },
   watch: {
@@ -174,6 +189,20 @@ export default {
     }
   },
   methods: {
+    editNode(id) {
+      console.log(this.desserts, id)
+      const item = this.nodes.find(item => item.id === id)
+      console.log(id)
+      this.temporary = {...item}
+    },
+    saveTemporary() {
+      console.log(this.temporary.id);
+      const item = this.desserts.find(item => item.id === this.temporary.id)
+      console.log(item, this.temporary)
+      const index = this.desserts.indexOf(item)
+      this.desserts.splice(index, 1, this.temporary)
+      this.temporary = {}
+    },
     showItems(page, count) {
       this.page = page
       this.dessertsToShow = this.desserts.slice(+count * (page - 1), +count * page)
@@ -219,6 +248,13 @@ li {
   color: lightgray;
   display: flex;
   flex-direction: row;
+}
+
+button:active, button:focus {
+  outline: none;
+}
+button::-moz-focus-inner {
+  border: 0;
 }
 
 th:first-child .arrow-hov:first-child {
